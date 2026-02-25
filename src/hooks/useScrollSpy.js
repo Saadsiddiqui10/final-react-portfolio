@@ -19,7 +19,7 @@ export default function useScrollSpy(ids) {
     });
 
     return () => obs.disconnect();
-  }, []);
+  }, [ids]);
 
   return active;
 }
