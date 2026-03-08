@@ -71,8 +71,8 @@ export const PROJECTS = [
     desc: "Headless CMS blog with Markdown support, tagging, and dark mode built with Next.js.",
     tags: ["Next.js", "MDX", "Tailwind"],
     color: "#eab308",
-    demo: "#",
-    code: "#",
+    demo: "https://blog-cms-inky-one.vercel.app",
+    code: "https://github.com/Saadsiddiqui10/blog-cms",
   },
     {
     title: "Java OOP Mini System",
