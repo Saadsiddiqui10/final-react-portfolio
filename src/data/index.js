@@ -55,8 +55,8 @@ export const PROJECTS = [
     desc: "Beautiful weather app with 7-day forecast, geo-location, and animated weather icons.",
     tags: ["React", "OpenWeather API", "Chart.js"],
     color: "#10b981",
-    demo: "#",
-    code: "#",
+    demo: "https://weather-app-dun-eta-37.vercel.app",
+    code: "https://github.com/Saadsiddiqui10/weather-app",
   },
   {
     title: "Software Company Website",
