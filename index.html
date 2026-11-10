@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      try {
+        document.querySelector('meta[name="color-scheme"]').content =
+          localStorage.getItem('color-scheme') ?? 'light dark'
+      } catch {}
+    </script>
+    <title>Saad Siddiqui — Full-Stack & AI Automation Developer</title>
+    <meta
+      name="description"
+      content="Saad Siddiqui is a full-stack developer (Laravel, React, Node.js) who ships production web apps and builds AI and automation features. Open to remote roles."
+    />
+    <meta name="author" content="Saad Siddiqui" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Saad Siddiqui — Full-Stack & AI Automation Developer" />
+    <meta
+      property="og:description"
+      content="Production web apps with Laravel, React and Node.js, plus LLM features and workflow automation. Open to remote roles."
+    />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Saad Siddiqui",
+        "jobTitle": "Full-Stack Developer",
+        "email": "mailto:saadsiddiqui2002@outlook.com",
+        "address": { "@type": "PostalAddress", "addressLocality": "Karachi", "addressCountry": "PK" },
+        "alumniOf": { "@type": "CollegeOrUniversity", "name": "Iqra University" },
+        "worksFor": { "@type": "Organization", "name": "YM Tech Fusion LLC", "url": "https://ymtechfusion.com" },
+        "knowsAbout": ["Laravel", "React", "Node.js", "MySQL", "MongoDB", "Stripe", "LLM integration", "Workflow automation"],
+        "sameAs": [
+          "https://github.com/Saadsiddiqui10",
+          "https://www.linkedin.com/in/saad-siddiqui-97442a23a/"
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

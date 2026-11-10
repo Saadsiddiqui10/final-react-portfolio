@@ -1,13 +1,561 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import 'tailwindcss';
+@import '@fontsource-variable/bricolage-grotesque';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
+
+@theme {
+  --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Code', monospace;
+
+  --color-bg: light-dark(#f6f4ef, #0f0f0d);
+  --color-surface: light-dark(#ffffff, #191916);
+  --color-ink: light-dark(#14130f, #f2f0ea);
+  --color-muted: light-dark(#5c5a52, #a8a59b);
+  --color-line: light-dark(#dedad0, #2b2a26);
+  --color-accent: light-dark(#b8330c, #ff7a4d);
+  --color-spark: light-dark(#e5471c, #ff7a4d);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+:root {
+  color-scheme: light dark;
+
+  &:has(> head > meta[name='color-scheme'][content='dark']) {
+    color-scheme: dark;
+  }
+  &:has(> head > meta[name='color-scheme'][content='light']) {
+    color-scheme: light;
+  }
+}
+
+html {
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-spark);
+  color: #14130f;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Theme toggle icons: show the icon for the scheme currently rendered. */
+.only-dark {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not(:has(> head > meta[name='color-scheme'][content='light'])) {
+    .only-dark {
+      display: inline;
+    }
+    .only-light {
+      display: none;
+    }
+  }
+}
+:root:has(> head > meta[name='color-scheme'][content='dark']) {
+  .only-dark {
+    display: inline;
+  }
+  .only-light {
+    display: none;
+  }
+}
+
+/* Faint grid behind the hero. */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 30%, transparent 75%);
+  opacity: 0.55;
+}
+
+/* Pointer spotlight: a layer revealed by a radial mask that follows the cursor.
+   Purely decorative, everything underneath is visible without it. */
+@property --spot-size {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+.spot {
+  --mx: 50%;
+  --my: 50%;
+}
+.spot-layer {
+  pointer-events: none;
+  transition: --spot-size 0.3s ease-out;
+  mask-image: radial-gradient(circle at var(--mx) var(--my), #000 0, transparent var(--spot-size));
+  mask-repeat: no-repeat;
+}
+.spot-border {
+  z-index: 10;
+  border: 1px solid var(--color-spark);
+}
+.hero-glow {
+  background-image:
+    linear-gradient(to right, var(--color-spark) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-spark) 1px, transparent 1px);
+  opacity: 0.7;
+}
+@media (hover: hover) {
+  .spot:hover {
+    --spot-size: 300px;
+  }
+}
+
+/* Buttons */
+.btn-primary,
+.btn-ghost,
+.btn-icon {
+  display: inline-flex;
+  height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition:
+    translate 0.2s ease-out,
+    border-color 0.2s,
+    scale 0.12s;
+}
+.btn-primary {
+  padding-inline: 1.5rem;
+  background: var(--color-ink);
+  color: var(--color-bg);
+}
+.btn-ghost,
+.btn-icon {
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+}
+.btn-ghost {
+  padding-inline: 1.5rem;
+}
+.btn-icon {
+  width: 3rem;
+}
+.btn-primary:hover {
+  translate: 0 -2px;
+}
+.btn-ghost:hover,
+.btn-icon:hover {
+  border-color: var(--color-ink);
+}
+.btn-primary:active,
+.btn-ghost:active,
+.btn-icon:active {
+  scale: 0.97;
+  translate: 0;
+}
+.btn-primary svg,
+.link-arrow svg:last-child {
+  transition: translate 0.2s ease-out;
+}
+.btn-primary:hover svg,
+.link-arrow:hover svg:last-child {
+  translate: 2px -2px;
+}
+.btn-primary[href^='#']:hover svg {
+  translate: 0 2px;
+}
+
+/* Current section marker in the nav (shape, not colour alone). */
+.nav-link[aria-current]::after {
+  content: '';
+  position: absolute;
+  inset: auto 0.875rem 0.15rem;
+  border-block-end: 2px solid var(--color-spark);
+}
+
+/* Command palette */
+.palette {
+  width: min(34rem, calc(100vw - 2rem));
+  margin: 12vh auto auto;
+  padding: 0;
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.45);
+}
+.palette:modal {
+  overscroll-behavior: contain;
+}
+.palette::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background: rgb(10 10 8 / 0.55);
+  backdrop-filter: blur(3px);
+}
+
+/* VanzaPack walkthrough */
+.demo-btn {
+  display: inline-flex;
+  height: 2.5rem;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 0.5rem;
+  padding-inline: 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition:
+    opacity 0.2s,
+    scale 0.12s;
+}
+.demo-btn:active {
+  scale: 0.97;
+}
+.demo-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.demo-tab {
+  position: relative;
+  display: flex;
+  flex: none;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.25rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-align: start;
+  color: var(--color-muted);
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+.demo-tab:hover {
+  color: var(--color-ink);
+}
+.demo-tab[aria-selected='true'] {
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+.demo-tab[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  border-block-end: 3px solid var(--color-spark);
+}
+@media (width >= 64rem) {
+  .demo-tab[aria-selected='true']::after {
+    inset: 0 auto 0 0;
+    border-block-end: 0;
+    border-inline-start: 3px solid var(--color-spark);
+  }
+}
+
+/* Project preview details */
+.typing i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.pipeline li {
+  transition: border-color 0.2s;
+}
+
+/* Screenshots zoom toward the pointer while their card is hovered. */
+.shot img {
+  transform-origin: var(--mx, 50%) var(--my, 0%);
+  transition: scale 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@media (hover: hover) {
+  .spot:hover .shot img {
+    scale: 1.18;
+  }
+}
+
+/* Hero lens switch */
+.mode-switch {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+}
+.mode-switch button {
+  position: relative;
+  height: 2.75rem;
+  cursor: pointer;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: var(--color-surface);
+  padding-inline: 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background-color 0.2s;
+}
+.mode-switch button + button {
+  margin-inline-start: -0.5rem;
+}
+.mode-switch button:hover {
+  color: var(--color-ink);
+  border-color: var(--color-ink);
+}
+.mode-switch button[aria-pressed='true'] {
+  z-index: 1;
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-bg);
+}
+
+/* Skills that link to work */
+.skill-chip {
+  cursor: pointer;
+  border: 1px solid var(--color-line);
+  border-radius: 0.5rem;
+  background: var(--color-surface);
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  text-decoration: underline dotted var(--color-muted);
+  text-underline-offset: 4px;
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+.skill-chip:hover {
+  border-color: var(--color-ink);
+}
+.skill-chip[aria-pressed='true'] {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-bg);
+  text-decoration-color: transparent;
+}
+
+/* Stack names between hero and work */
+.scroll-row {
+  display: flex;
+  width: max-content;
+  gap: 2.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  color: var(--color-line);
+}
+.scroll-row-b {
+  translate: -18% 0;
+}
+
+.progress {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        translate: 0 28px;
+      }
+    }
+    .reveal {
+      animation: reveal auto linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% cover 22%;
+    }
+
+    /* Rows slide in opposite directions as the strip crosses the viewport. */
+    @keyframes slide-a {
+      from {
+        translate: 0 0;
+      }
+      to {
+        translate: -22% 0;
+      }
+    }
+    @keyframes slide-b {
+      from {
+        translate: -22% 0;
+      }
+      to {
+        translate: 0 0;
+      }
+    }
+    .scroll-row {
+      animation: slide-a auto linear both;
+      animation-timeline: view();
+    }
+    .scroll-row-b {
+      animation-name: slide-b;
+    }
+
+    /* Hero content eases back as it scrolls away. */
+    @keyframes hero-out {
+      to {
+        opacity: 0.15;
+        scale: 0.96;
+        translate: 0 -24px;
+      }
+    }
+    .hero-out {
+      animation: hero-out auto linear forwards;
+      animation-timeline: view();
+      animation-range: exit 10% exit 90%;
+    }
+
+    @keyframes grow-x {
+      from {
+        scale: 0 1;
+      }
+    }
+    .progress {
+      display: block;
+      transform-origin: 0 50%;
+      animation: grow-x auto linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+
+  /* Hero entrance, on load. */
+  @keyframes rise {
+    from {
+      opacity: 0;
+      translate: 0 18px;
+    }
+  }
+  .rise {
+    animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
+
+  /* Headline: each word slides up out of its own clipped line box. */
+  .word {
+    display: inline-block;
+    overflow: clip;
+    overflow-clip-margin: 0.12em;
+    vertical-align: bottom;
+  }
+  @keyframes word-up {
+    from {
+      translate: 0 105%;
+    }
+  }
+  .word > span {
+    display: inline-block;
+    animation: word-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(120ms + var(--i, 0) * 70ms);
+  }
+
+  /* Small "something just changed" pop for demo values. */
+  @keyframes pop {
+    from {
+      opacity: 0;
+      translate: 0 6px;
+    }
+  }
+  .pop {
+    animation: pop 0.3s ease-out both;
+  }
+
+  @keyframes spin {
+    to {
+      rotate: 1turn;
+    }
+  }
+  .spin {
+    animation: spin 0.9s linear infinite;
+  }
+
+  @keyframes typing {
+    30% {
+      translate: 0 -3px;
+      opacity: 1;
+    }
+  }
+  .typing i {
+    opacity: 0.5;
+    animation: typing 1.2s ease-in-out infinite;
+  }
+  .typing i:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .typing i:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  /* Webhook pipeline: steps light up in order, then reset. */
+  @keyframes step-on {
+    0%,
+    100% {
+      background: var(--color-line);
+    }
+    12%,
+    85% {
+      background: var(--color-spark);
+    }
+  }
+  .pipeline .dot {
+    animation: step-on 5s ease-out infinite;
+    animation-delay: calc(var(--i) * 0.7s);
+  }
+
+  @keyframes palette-in {
+    from {
+      opacity: 0;
+      translate: 0 -8px;
+      scale: 0.98;
+    }
+  }
+  .palette[open] {
+    animation: palette-in 0.18s ease-out;
+  }
+
+  @keyframes pulse-dot {
+    50% {
+      opacity: 0.35;
+    }
+  }
+  .pulse-dot {
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }
